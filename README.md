@@ -24,7 +24,7 @@ Siga os passos abaixo para clonar o repositório e iniciar a aplicação complet
 1. Clone o Repositório
 
 # Clone este repositório para a sua máquina local
-git clone [<URL_DO_SEU_REPOSITORIO>](https://github.com/AAHoffmann/parking_project.git)
+git clone https://github.com/AAHoffmann/parking_project.git
 
 # Navegue até a pasta do projeto
 cd <NOME_DA_PASTA_DO_PROJETO>
