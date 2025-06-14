@@ -1,4 +1,5 @@
 🚗 Sistema de Gerenciamento de Estacionamento Distribuído
+
 Este repositório contém o código-fonte de um sistema de gerenciamento de estacionamento desenvolvido com uma arquitetura de microsserviços, orientado a eventos e orquestrado localmente com Docker Compose.
 
 📜 Visão Geral
