@@ -1,44 +1,77 @@
-Documento 1: Manual de Execução do Projeto (com Docker Compose)
-Manual de Execução: Sistema de Gerenciamento de Estacionamento com Docker Compose
-1. Visão Geral
-Este manual fornece as instruções para configurar e executar a aplicação de gerenciamento de estacionamento em um ambiente local utilizando Docker e Docker Compose. A aplicação é composta por múltiplos microsserviços containerizados que são orquestrados para funcionar de forma integrada.
+🚗 Sistema de Gerenciamento de Estacionamento Distribuído
+Este repositório contém o código-fonte de um sistema de gerenciamento de estacionamento desenvolvido com uma arquitetura de microsserviços, orientado a eventos e orquestrado localmente com Docker Compose.
 
-2. Pré-requisitos
+📜 Visão Geral
+O projeto demonstra a aplicação de padrões de arquitetura distribuída em um caso de uso prático. A aplicação é composta por múltiplos serviços independentes e containerizados que se comunicam de forma assíncrona, garantindo resiliência e escalabilidade.
+
+Arquitetura: Microsserviços, Orientada a Eventos (EDA), Persistência Poliglota.
+Tecnologias: Python (FastAPI), Docker, Docker Compose, RabbitMQ, Redis, MongoDB.
+🛠️ Pré-requisitos
 Antes de começar, garanta que os seguintes softwares estão instalados e configurados em sua máquina:
 
-Git: Para clonar o repositório do projeto.
-Docker Desktop: Inclui o Docker Engine e o Docker Compose, essenciais para rodar a aplicação.
-(Opcional, mas recomendado) MongoDB Compass: Para visualizar os dados persistidos no banco de dados.
-(Opcional) Um editor de código como o VS Code.
-3. Configuração e Execução
-Clonar o Repositório:
+Git
+Docker Desktop (inclui Docker e Docker Compose)
+(Opcional) MongoDB Compass para visualizar os dados.
+🚀 Configuração e Execução
+Siga os passos abaixo para clonar o repositório e iniciar a aplicação completa.
+
+1. Clone o Repositório
+
 Bash
 
-# Use o comando para o repositório real do projeto
+# Clone este repositório para a sua máquina local
 git clone <URL_DO_SEU_REPOSITORIO>
+
+# Navegue até a pasta do projeto
 cd <NOME_DA_PASTA_DO_PROJETO>
-Iniciar a Aplicação: Com o Docker Desktop em execução, abra um terminal na pasta raiz do projeto e execute o seguinte comando:
+2. Inicie a Aplicação com Docker Compose
+
+Com o Docker Desktop em execução, execute o seguinte comando no terminal, na pasta raiz do projeto.
+
 Bash
 
 docker-compose up --build
-O que este comando faz?
---build: Constrói as imagens Docker para os serviços api e worker a partir de seus Dockerfile.
-up: Cria uma rede virtual para os serviços e inicia um contêiner para cada serviço definido no arquivo docker-compose.yml (api, worker, redis, rabbitmq, mongo).
-O terminal exibirá os logs de todos os serviços em tempo real.
-4. Verificação e Acesso
-Após a execução do comando, os serviços estarão disponíveis nos seguintes endereços na sua máquina local (localhost):
+--build: Garante que as imagens Docker para os serviços api e worker sejam construídas a partir dos Dockerfile.
+up: Inicia todos os serviços (api, worker, redis, rabbitmq, mongo), redes e volumes definidos no arquivo docker-compose.yml.
+O terminal exibirá os logs de todos os serviços em tempo real. Aguarde até que as mensagens de inicialização apareçam para todos os contêineres.
 
-Acessar a Interface Web da Aplicação:
+✅ Verificação e Acesso
+Após a inicialização completa, os serviços estarão acessíveis nos seguintes endereços:
 
-Abra seu navegador e acesse: http://localhost:8000
-Acessar a Interface de Gerenciamento do RabbitMQ:
-
-Para visualizar as filas e mensagens em trânsito.
-Acesse: http://localhost:15672
-Login: guest / Senha: guest
-Verificar os Dados no MongoDB:
-
-Abra o MongoDB Compass.
-Crie uma nova conexão utilizando a seguinte string (URI):
+🌐 Aplicação Web Principal
+URL: http://localhost:8000
+Descrição: Interface principal para realizar o check-in e check-out de veículos.
+🐰 RabbitMQ Management UI
+URL: http://localhost:15672
+Descrição: Interface para monitorar o status do RabbitMQ, visualizar filas e mensagens.
+Login: guest
+Senha: guest
+🍃 Banco de Dados MongoDB
+Ferramenta: Use o MongoDB Compass para se conectar.
+String de Conexão:
 mongodb://mongoadmin:secret@localhost:27017/
-Clique em "Connect". Você poderá navegar pelo banco de dados parking_db e ver os registros na coleção parking_history.
+Descrição: Após conectar, você poderá ver o banco de dados parking_db e a coleção parking_history com os registros de todos os check-outs processados.
+⚙️ Comandos Úteis do Docker Compose
+Iniciar serviços em segundo plano (detached mode):
+Bash
+
+docker-compose up -d
+Ver o status dos serviços em execução:
+Bash
+
+docker-compose ps
+Acompanhar os logs de um serviço específico (ex: worker):
+Bash
+
+docker-compose logs -f worker
+Parar e remover contêineres e redes:
+Bash
+
+docker-compose down
+🧹 Limpando o Ambiente
+Para parar completamente a aplicação e remover todos os dados persistidos nos volumes (útil para começar do zero), use o comando:
+
+Bash
+
+docker-compose down -v
+A flag -v remove os volumes nomeados, limpando os bancos de dados.
