@@ -1,0 +1,59 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      - ./app:/code/app
+    environment:
+      - REDIS_HOST=redis
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - redis
+      - rabbitmq
+
+  worker:
+    build: .
+    command: python -u app/worker.py
+    volumes:
+      - ./app:/code/app
+    environment:
+      # Credenciais do Redis e RabbitMQ (existentes)
+      - REDIS_HOST=redis
+      - RABBITMQ_HOST=rabbitmq
+      # Novas credenciais para o MongoDB
+      - MONGO_HOST=mongo
+      - MONGO_USER=mongoadmin
+      - MONGO_PASS=secret
+    depends_on:
+      - rabbitmq
+      - redis
+      - mongo # O worker agora também depende do mongo
+
+  redis:
+    image: "redis:7-alpine"
+    volumes:
+      - redis-data:/data
+
+  rabbitmq:
+    image: "rabbitmq:3.13-management-alpine"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  # Novo serviço! O banco de dados MongoDB
+  mongo:
+    image: mongo:6.0
+    ports:
+      # Porta padrão do MongoDB
+      - "27017:27017"
+    environment:
+      # Cria um usuário root para o banco de dados
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    volumes:
+      - mongo-data:/data/db # Volume para persistir os dados do MongoDB
+
+volumes:
+  redis-data:
+  mongo-data: # Declara o novo volume para o MongoDB

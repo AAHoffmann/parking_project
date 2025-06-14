@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Estacionamento</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; color: #333; max-width: 800px; margin: 40px auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #444; }
+        .container { display: flex; gap: 40px; }
+        .check-in, .parked { flex: 1; }
+        form { margin-bottom: 20px; }
+        input[type="text"] { padding: 8px; width: 200px; }
+        button { padding: 8px 15px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        tr:hover { background-color: #f1f1f1; }
+        .checkout-btn { background-color: #dc3545; }
+        .checkout-btn:hover { background-color: #c82333; }
+    </style>
+</head>
+<body>
+    <h1>🚗 Gerenciador de Estacionamento</h1>
+    <div class="container">
+        <div class="check-in">
+            <h2>Registrar Entrada</h2>
+            <form action="/check-in" method="post">
+                <label for="plate">Placa do Veículo:</label><br>
+                <input type="text" id="plate" name="plate" required>
+                <button type="submit">Check-in</button>
+            </form>
+        </div>
+        
+        <div class="parked">
+            <h2>Veículos no Pátio ({{ parked_cars|length }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Horário de Entrada (UTC)</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plate, data in parked_cars.items() %}
+                    <tr>
+                        <td>{{ plate }}</td>
+                        <td>{{ data.entry_time.split('T')[1].split('.')[0] }}</td>
+                        <td>
+                            <form action="/check-out" method="post" style="margin:0;">
+                                <input type="hidden" name="plate" value="{{ plate }}">
+                                <button class="checkout-btn" type="submit">Check-out</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align:center;">Nenhum carro estacionado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
